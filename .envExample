@@ -1,0 +1,8 @@
+PG_HOST = db-dev
+PG_PORT = 5432
+PG_USER = postgres
+PG_PASSWORD = 1qaz@WSX
+PG_DBNAME = angular_test
+PG_SSLMODE = disable
+
+GO_ENV=development

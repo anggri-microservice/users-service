@@ -1,0 +1,23 @@
+FROM golang:alpine
+ENV SERVICE_NAME users-service
+
+WORKDIR "/go/src/gitlab.com/pt-mai/${SERVICE_NAME}"
+
+COPY . .
+COPY id_rsa /tmp/id_rsa
+RUN apk update && apk add --no-cache git openssh-client && \
+    chmod 600 /tmp/id_rsa && \
+    mkdir ~/.ssh && \
+    mv /tmp/id_rsa ~/.ssh/id_rsa && \
+    eval $(ssh-agent) && \
+    echo -e "StrictHostKeyChecking no" >> /etc/ssh/ssh_config && \
+    ssh-add ~/.ssh/id_rsa && \
+    git config --global url."git@gitlab.com:".insteadOf "https://gitlab.com/" && \
+    export GOPRIVATE=gitlab.com/pt-mai && \
+    go get github.com/githubnemo/CompileDaemon && \
+    go get github.com/fullstorydev/grpcurl && \
+    go install github.com/fullstorydev/grpcurl/cmd/grpcurl && \
+    go install github.com/bayucandra/go-seed-pg && \
+    go mod vendor
+
+CMD ["sh", "build.sh"]

@@ -210,6 +210,7 @@ func GetUserByID(c *fiber.Ctx) error {
 
 	var users []Users
 	err := db.DBConn.Select(&users, SQL, c.Params("id"))
+
 	if err != nil {
 		log.Println(err)
 		messageError := err.Error()
@@ -223,11 +224,16 @@ func GetUserByID(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(errTemplate)
 	}
 
+	var data interface{}
+	if len(users) != 0 {
+		data = users[0]
+	}
+
 	successTemplate := map[string]interface{}{
 		"status":  fiber.StatusOK,
 		"message": "Sukses menampilkan list user",
 		"total":   1,
-		"data":    users[0],
+		"data":    data,
 	}
 	return c.JSON(successTemplate)
 }

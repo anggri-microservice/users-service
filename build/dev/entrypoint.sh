@@ -15,6 +15,9 @@ fi
 sudo chown -R anggri:anggri /go/pkg
 sudo chown -R anggri:anggri ./vendor
 
+export GOPRIVATE="github.com/anggri-microservice/*"
+export CGO_ENABLED="0"
+
 if [ "${COMPOSE_PROJECT_NAME}" = "emporia" ]; then
     make go-mod-replace-clear
     make go-mod-replace-insert
